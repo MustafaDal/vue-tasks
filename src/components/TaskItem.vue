@@ -9,7 +9,7 @@
       </div>
       <div class="card-footer text-muted">
         <a href="#" class="card-link">{{task.status}}</a>
-        <a href="#" class="card-link">{{task.archieved}}</a>
+        <a @click.prevent='task.archieved = !task.archieved' href="#" class="card-link">{{task.archieved ? 'Arşivden Çıkar' : 'Arşivle'}}</a>
       </div>
     </div>
     <br />
