@@ -1,56 +1,67 @@
 <template>
   <div class="">
-    <form>
-      <div class="form-group">
-        <label for="exampleTextarea">Example textarea</label>
-        <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
-      </div>
-      <div class="form-group">
-        <label for="exampleInputEmail1">Başlangıç Tarihi</label>
-        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Başlangıç Tarihi" />
-      </div>
-      <div class="form-group">
-        <label for="exampleInputEmail1">Bitiş Tarihi</label>
-        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Bitiş Tarihi" />
-      </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-    <br />
+    <a @click.prevent="editorActive = true" v-if="!editorActive" href="#" class="btn btn-outline-primary">Editürü Göster</a>
+    <a @click.prevent="editorActive = false" v-if="editorActive" href="#" class="btn btn-outline-primary">Editürü Gizle</a>
+    <hr v-if="editorActive" />
 
-    <task-item 
-      v-for="item in tasks"
-      :task="item"
-      :key="item.id">
-    </task-item>
+    <task-editor v-if="editorActive"></task-editor>
+    
+    <hr />
+
+    <div class="row">
+      <task-item 
+        v-for="item in tasks"
+        :task="item"
+        :key="item.id"
+        class="col-6">
+      </task-item>
+    </div>
   </div>
 </template>
 
 <script>
+import TaskEditor from '@/components/TaskEditor'
 import TaskItem from '@/components/TaskItem'
 
 export default {
   name: 'task_list',
+  components: {
+    TaskEditor,
+    TaskItem
+  },
   data () {
     return {
+      editorActive: false,
       tasks: [{
         id: 1,
         content: 'vue task sistemini kur',
-        start_date: new Date(),
-        end_date: new Date(),
+        start_date: new Date().toLocaleDateString(),
+        end_date: new Date().toLocaleDateString(),
         status: 'waiting',
         archieved: false
       }, {
         id: 2,
         content: 'vue task sistemini kur 2',
-        start_date: new Date(),
-        end_date: new Date(),
+        start_date: new Date().toLocaleDateString(),
+        end_date: new Date().toLocaleDateString(),
+        status: 'done',
+        archieved: true
+      }, {
+        id: 3,
+        content: 'vue task sistemini kur 3',
+        start_date: new Date().toLocaleDateString(),
+        end_date: new Date().toLocaleDateString(),
+        status: 'waiting',
+        archieved: false
+      }, {
+        id: 4,
+        content: 'vue task sistemini kur 4',
+        start_date: new Date().toLocaleDateString(),
+        end_date: new Date().toLocaleDateString(),
         status: 'done',
         archieved: true
       }]
     }
-  },
-  components: {
-    TaskItem
   }
 }
 </script>
