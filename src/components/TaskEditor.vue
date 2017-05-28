@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="col-12">
-        <button type="submt" class="btn btn-primary">Kaydet</button>
+        <button @click.prevent="taskAdd" type="submt" class="btn btn-primary">Kaydet</button>
       </div>
     </form>
   </div>
@@ -51,6 +51,20 @@ export default {
   },
   destroyed () {
     $('.datepicker').datepicker('destroy')
+  },
+  methods: {
+    taskAdd: function (e) {
+      this.$emit('taskAdd', {
+        id: Math.floor((Math.random() * 100000) + 1),
+        content: this.content,
+        start_date: this.start_date,
+        end_date: this.end_date,
+        status: this.status,
+        archieved: this.archieved
+      })
+      // reset data
+      Object.assign(this.$data, this.$options.data())
+    }
   }
 }
 </script>
