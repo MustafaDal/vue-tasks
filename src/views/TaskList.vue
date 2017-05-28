@@ -61,6 +61,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import TaskEditor from '@/components/TaskEditor'
 import TaskItem from '@/components/TaskItem'
 
@@ -148,15 +149,17 @@ export default {
       // filter tasks with date
       tasks = tasks.filter(task => {
         let result = false
+        let dateNow = moment(moment().format('DD.MM.YYYY'), 'DD.MM.YYYY')
+        let endDate = moment(task.end_date, 'DD.MM.YYYY')
         switch (this.taskFilterOptions.dateFilter) {
           case '':
-            result = (task.end_date >= new Date().toLocaleDateString())
+            result = (endDate.isSameOrAfter(dateNow))
             break
           case 'end-of-date':
-            result = (task.end_date = new Date().toLocaleDateString())
+            result = (endDate.isSame(dateNow))
             break
           case 'out-of-date':
-            result = (task.end_date <= new Date().toLocaleDateString())
+            result = (endDate.isBefore(dateNow))
             break
           default:
             result = false
@@ -169,11 +172,6 @@ export default {
   methods: {
     add: function (task) {
       this.tasks.unshift(task)
-    },
-    filters: {
-      all: function () {
-        return this.data.$tasks
-      }
     }
   }
 }

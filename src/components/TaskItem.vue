@@ -17,13 +17,22 @@
 
       <div class="card-footer text-muted">
         <div class="row">
-          <div class="col">
-            <strong class="card-link pull-md-right"><small>{{task.status}} - id: {{task.id}}</small></strong>
+          <div class="col-3">
+            <strong class="card-link pull-md-right"><small>{{task.status}}  <span class="badge badge-default">{{task.id}}</span></small></strong>
           </div>
-          <div class="col text-right">
-            <a @click.prevent="task.archieved = !task.archieved" href="#" class="card-link">{{task.archieved ? 'Arşivden Çıkar' : 'Arşivle'}}</a>
-            <a @click.prevent="update" v-if="isEditing" href="#" class="card-link">Güncelle</a>
-            <a @click.prevent="isEditing = !isEditing" href="#" class="card-link">{{!isEditing ? 'Düzenle' : 'Vazgeç'}}</a>
+          <div class="col d-flex justify-content-end">
+            <ul class="list-inline">
+              <li class="list-inline-item">
+                <select v-model="task.status" class="form-control">
+                  <option value="checked">Checked</option>
+                  <option value="waiting">Waiting</option>
+                  <option value="done">Done</option>
+                </select>
+              </li>
+              <li class="list-inline-item"><a @click.prevent="task.archieved = !task.archieved" href="#" class="card-link">{{task.archieved ? 'Arşivden Çıkar' : 'Arşivle'}}</a></li>
+              <li class="list-inline-item"><a @click.prevent="update" v-if="isEditing" href="#" class="card-link">Güncelle</a></li>
+              <li class="list-inline-item"><a @click.prevent="isEditing = !isEditing" href="#" class="card-link">{{!isEditing ? 'Düzenle' : 'Vazgeç'}}</a></li>
+            </ul>
           </div>
         </div>
       </div>
@@ -81,5 +90,8 @@ export default {
 <style scoped>
 .card {
   margin-bottom: 30px;
+}
+.card .card-footer .list-inline {
+  margin-bottom: 0;
 }
 </style>
