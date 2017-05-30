@@ -31,7 +31,8 @@
               </li>
               <li class="list-inline-item"><a @click.prevent="task.archieved = !task.archieved" href="#" class="card-link">{{task.archieved ? 'Arşivden Çıkar' : 'Arşivle'}}</a></li>
               <li class="list-inline-item"><a @click.prevent="update" v-if="isEditing" href="#" class="card-link">Güncelle</a></li>
-              <li class="list-inline-item"><a @click.prevent="isEditing = !isEditing" href="#" class="card-link">{{!isEditing ? 'Düzenle' : 'Vazgeç'}}</a></li>
+              <li class="list-inline-item"><a @click.prevent="edit" v-if="!isEditing" href="#" class="card-link">Düzenle</a></li>
+              <li class="list-inline-item"><a @click.prevent="cancel" v-if="isEditing" href="#" class="card-link">Vazgeç</a></li>
             </ul>
           </div>
         </div>
@@ -48,7 +49,8 @@ export default {
   components: { TaskUpdate },
   data () {
     return {
-      isEditing: false
+      isEditing: false,
+      cacheTask: {}
     }
   },
   props: {
@@ -78,9 +80,14 @@ export default {
   methods: {
     update: function () {
       this.isEditing = false
-      this.task.content = this.$children[0].$data.content
-      this.task.start_date = this.$children[0].$data.start_date
-      this.task.end_date = this.$children[0].$data.end_date
+    },
+    edit: function () {
+      this.isEditing = true
+      Object.assign(this.cacheTask, this.task)
+    },
+    cancel: function () {
+      this.isEditing = false
+      Object.assign(this.task, this.cacheTask)
     }
   }
 }

@@ -2,42 +2,75 @@
   <div class="">
     <div class="row">
       <div class="col-2">
-        <a @click.prevent="editorActive = true" v-if="!editorActive" href="#" class="btn btn-outline-primary">Editürü Göster</a>
-        <a @click.prevent="editorActive = false" v-if="editorActive" href="#" class="btn btn-outline-primary">Editürü Gizle</a>
+        <a @click.prevent="editorActive = !editorActive" href="#" class="btn btn-outline-primary">Editürü {{ !editorActive ? 'Göster' : 'Gizle' }}</a>
+      </div>
+      <div class="col-2">
+        <a @click.prevent="filterActive = !filterActive" href="#" class="btn btn-outline-primary">Filtreleri {{ !filterActive ? 'Göster' : 'Gizle' }}</a>
       </div>
       <div class="col">
-        <div class="row">
+        <div class="row" v-if="filterActive">
           <div class="col">
-            <select v-model="taskFilterOptions.statuFilter" class="form-control">
-              <option value="">All of Them</option>
-              <option value="checked">Checked</option>
-              <option value="waiting">Waiting</option>
-              <option value="done">Done</option>
-            </select>
+            <fieldset class="form-group">
+              <legend>Duruma Göre</legend>
+              <select v-model="taskFilterOptions.statuFilter" class="form-control">
+                <option value="">Statu Select</option>
+                <option value="checked">Checked</option>
+                <option value="waiting">Waiting</option>
+                <option value="done">Done</option>
+              </select>
+            </fieldset>
           </div>
           <div class="col">
-            <label class="form-check-label">
-            <input v-model="taskFilterOptions.showArchieved" class="form-check-input" type="checkbox" value="">
-              Arşivde Olanları Göster
-            </label>
+            <fieldset class="form-group">
+              <legend>Arşiv Durumunu</legend>
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input v-model="taskFilterOptions.showArchieved" class="form-check-input" type="radio" name="dateArchieved" value="">
+                  Tümü
+                </label>
+              </div>
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input v-model="taskFilterOptions.showArchieved" class="form-check-input" type="radio" name="dateArchieved" value="false">
+                  Arşivde Olmayanlar
+                </label>
+              </div>
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input v-model="taskFilterOptions.showArchieved" class="form-check-input" type="radio" name="dateArchieved" value="true">
+                  Arşivdeki Tasklar
+                </label>
+              </div>
+            </fieldset>
           </div>
           <div class="col">
-            <label class="form-check-label">
-            <input v-model="taskFilterOptions.dateFilter" class="form-check-input" type="radio" name="dateFilter" value="">
-              Güncel Tasklar
-            </label>
-          </div>
-          <div class="col">
-            <label class="form-check-label">
-            <input v-model="taskFilterOptions.dateFilter" class="form-check-input" type="radio" name="dateFilter" value="out-of-date">
-              Günü Geçmiş Tasklar
-            </label>
-          </div>
-          <div class="col">
-            <label class="form-check-label">
-            <input v-model="taskFilterOptions.dateFilter" class="form-check-input" type="radio" name="dateFilter" value="end-of-date">
-              Bugün Son Günü Olan Tasklar
-            </label>
+            <fieldset class="form-group">
+              <legend>Bitiş Tarihi</legend>
+              <div class="form-check">
+                <label class="form-check-label">
+                <input v-model="taskFilterOptions.dateFilter" class="form-check-input" type="radio" name="dateFilter" value="">
+                  Tümü
+                </label>
+              </div>
+              <div class="form-check">
+                <label class="form-check-label">
+                <input v-model="taskFilterOptions.dateFilter" class="form-check-input" type="radio" name="dateFilter" value="in-of-date">
+                  Güncel Tasklar
+                </label>
+              </div>
+              <div class="form-check">
+                <label class="form-check-label">
+                <input v-model="taskFilterOptions.dateFilter" class="form-check-input" type="radio" name="dateFilter" value="out-of-date">
+                  Günü Geçmiş Tasklar
+                </label>
+              </div>
+              <div class="form-check">
+                <label class="form-check-label">
+                <input v-model="taskFilterOptions.dateFilter" class="form-check-input" type="radio" name="dateFilter" value="end-of-date">
+                  Bugün Son Günü Olan Tasklar
+                </label>
+              </div>
+            </fieldset>
           </div>
         </div>
       </div>
@@ -75,9 +108,10 @@ export default {
     return {
       taskFilterOptions: {
         statuFilter: '',
-        showArchieved: false,
+        showArchieved: '',
         dateFilter: ''
       },
+      filterActive: false,
       editorActive: false,
       tasks: [{
         id: 1,
@@ -119,12 +153,14 @@ export default {
       taskFilterOptions.dateFilter      -->> normal, out-of-date, end-of-date     \\ normal, tarihi gecmemis task
       */
       // filter tasks with archieve
-      tasks = tasks.filter(task => {
-        if (this.taskFilterOptions.showArchieved) {
-          return task.archieved
-        }
-        return !task.archieved
-      })
+      if (this.taskFilterOptions.showArchieved !== '') {
+        tasks = tasks.filter(task => {
+          if (this.taskFilterOptions.showArchieved === 'true') {
+            return task.archieved
+          }
+          return !task.archieved
+        })
+      }
       // filter tasks with status
       tasks = tasks.filter(task => {
         let result = false
@@ -153,6 +189,9 @@ export default {
         let endDate = moment(task.end_date, 'DD.MM.YYYY')
         switch (this.taskFilterOptions.dateFilter) {
           case '':
+            result = true
+            break
+          case 'in-of-date':
             result = (endDate.isSameOrAfter(dateNow))
             break
           case 'end-of-date':
@@ -179,4 +218,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  fieldset.form-group {
+    margin-bottom: 0;
+  }
 </style>

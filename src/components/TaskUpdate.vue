@@ -4,17 +4,17 @@
       <div class="col-7">
         <div class="form-group">
           <label>Açıklama Alanı</label>
-          <textarea v-model="content" class="form-control" rows="5"></textarea>
+          <textarea v-model="task.content" class="form-control" rows="5"></textarea>
         </div>
       </div>
       <div class="col-5">
         <div class="form-group">
           <label>Başlangıç Tarihi</label>
-          <input v-model="start_date" data-model="start_date" type="text" class="form-control datepicker" placeholder="" />
+          <input v-model="task.start_date" data-model="start_date" type="text" class="form-control datepicker" placeholder="" />
         </div>
         <div class="form-group">
           <label>Bitiş Tarihi</label>
-          <input v-model="end_date" data-model="end_date" type="text" class="form-control datepicker" placeholder="" />
+          <input v-model="task.end_date" data-model="end_date" type="text" class="form-control datepicker" placeholder="" />
         </div>
       </div>
     </form>
@@ -28,13 +28,6 @@ import '@/../static/bootstrap-datepicker/js/bootstrap-datepicker.js'
 
 export default {
   name: 'TaskUpdate',
-  data () {
-    return {
-      content: '',
-      start_date: '',
-      end_date: ''
-    }
-  },
   props: {
     task: {
       content: {
@@ -50,11 +43,6 @@ export default {
         required: true
       }
     }
-  },
-  created () {
-    this.content = this.task.content
-    this.start_date = this.task.start_date
-    this.end_date = this.task.end_date
   },
   mounted () {
     const self = this
