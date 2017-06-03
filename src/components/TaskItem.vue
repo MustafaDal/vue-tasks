@@ -2,7 +2,7 @@
   <div class="">
     <div class="card">
       <div class="card-block">
-        <task-update v-if="isEditing" :task="task"></task-update>
+        <task-update v-if="isEditing" :cacheTask="cacheTask"></task-update>
         <div v-else>
           <p class="card-text">{{task.content}}</p>
           <p class="card-text">
@@ -24,12 +24,12 @@
             <ul class="list-inline">
               <li class="list-inline-item">
                 <select v-model="task.status" class="form-control">
-                  <option value="checked">Checked</option>
                   <option value="waiting">Waiting</option>
+                  <option value="checked">Checked</option>
                   <option value="done">Done</option>
                 </select>
               </li>
-              <li class="list-inline-item"><a @click.prevent="task.archieved = !task.archieved" href="#" class="card-link">{{task.archieved ? 'Arşivden Çıkar' : 'Arşivle'}}</a></li>
+              <li class="list-inline-item"><a @click.prevent="$store.dispatch('archiveToggle', task.id)" href="#" class="card-link">{{task.archieved ? 'Arşivden Çıkar' : 'Arşivle'}}</a></li>
               <li class="list-inline-item"><a @click.prevent="update" v-if="isEditing" href="#" class="card-link">Güncelle</a></li>
               <li class="list-inline-item"><a @click.prevent="edit" v-if="!isEditing" href="#" class="card-link">Düzenle</a></li>
               <li class="list-inline-item"><a @click.prevent="cancel" v-if="isEditing" href="#" class="card-link">Vazgeç</a></li>
@@ -50,11 +50,26 @@ export default {
   data () {
     return {
       isEditing: false,
-      cacheTask: {}
+      cacheTask: {
+        content: this.task.content,
+        start_date: this.task.start_date,
+        end_date: this.task.end_date
+      }
+    }
+  },
+  watch: {
+    'task.status' (val) {
+      const id = this.task.id
+      const status = val
+      this.$store.dispatch('changeStatus', {id, status})
     }
   },
   props: {
     task: {
+      id: {
+        type: Number,
+        required: true
+      },
       content: {
         type: String,
         required: true
@@ -79,6 +94,8 @@ export default {
   },
   methods: {
     update: function () {
+      Object.assign(this.task, this.cacheTask)
+      this.$store.dispatch('update', this.task)
       this.isEditing = false
     },
     edit: function () {

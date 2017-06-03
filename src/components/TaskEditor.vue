@@ -53,8 +53,8 @@ export default {
     $('.datepicker').datepicker('destroy')
   },
   methods: {
-    taskAdd: function (e) {
-      this.$emit('taskAdd', {
+    taskAdd () {
+      this.$store.dispatch('add', {
         id: Math.floor((Math.random() * 100000) + 1),
         content: this.content,
         start_date: this.start_date,

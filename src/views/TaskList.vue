@@ -2,7 +2,7 @@
   <div class="">
     <div class="row">
       <div class="col-2">
-        <a @click.prevent="editorActive = !editorActive" href="#" class="btn btn-outline-primary">Editürü {{ !editorActive ? 'Göster' : 'Gizle' }}</a>
+        <a @click.prevent="editorActive = !editorActive" href="#" class="btn btn-outline-primary">Editörü {{ !editorActive ? 'Göster' : 'Gizle' }}</a>
       </div>
       <div class="col-2">
         <a @click.prevent="filterActive = !filterActive" href="#" class="btn btn-outline-primary">Filtreleri {{ !filterActive ? 'Göster' : 'Gizle' }}</a>
@@ -14,8 +14,8 @@
               <legend>Duruma Göre</legend>
               <select v-model="taskFilterOptions.statuFilter" class="form-control">
                 <option value="">Statu Select</option>
-                <option value="checked">Checked</option>
                 <option value="waiting">Waiting</option>
+                <option value="checked">Checked</option>
                 <option value="done">Done</option>
               </select>
             </fieldset>
@@ -78,7 +78,7 @@
 
     <hr v-if="editorActive" />
 
-    <task-editor v-if="editorActive" @taskAdd="add"></task-editor>
+    <task-editor v-if="editorActive"></task-editor>
     
     <hr />
 
@@ -94,9 +94,9 @@
 </template>
 
 <script>
-import moment from 'moment'
 import TaskEditor from '@/components/TaskEditor'
 import TaskItem from '@/components/TaskItem'
+import moment from 'moment'
 
 export default {
   name: 'task_list',
@@ -112,41 +112,12 @@ export default {
         dateFilter: ''
       },
       filterActive: false,
-      editorActive: false,
-      tasks: [{
-        id: 1,
-        content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        start_date: '15.05.2017',
-        end_date: '28.05.2017',
-        status: 'waiting',
-        archieved: false
-      }, {
-        id: 2,
-        content: 'Nunc ac justo quis neque consectetur dignissim ut laoreet nulla.',
-        start_date: '24.05.2017',
-        end_date: '30.05.2017',
-        status: 'done',
-        archieved: false
-      }, {
-        id: 3,
-        content: 'Proin molestie sem quis mauris auctor tempus.',
-        start_date: '20.05.2017',
-        end_date: '27.05.2017',
-        status: 'checked',
-        archieved: false
-      }, {
-        id: 4,
-        content: 'Quisque mollis magna ac mi feugiat, non ullamcorper mi consectetur.',
-        start_date: '27.05.2017',
-        end_date: '27.05.2017',
-        status: 'done',
-        archieved: true
-      }]
+      editorActive: false
     }
   },
   computed: {
     filteredTasks: function () {
-      let tasks = this.$data.tasks
+      let tasks = this.$store.getters.allTasks
       /*
       taskFilterOptions.showArchieved   -->> true, false                          \\ default false
       taskFilterOptions.statuFilter     -->> '', checked, waiting, done           \\ bos ise tumu
@@ -206,11 +177,6 @@ export default {
         return result
       })
       return tasks
-    }
-  },
-  methods: {
-    add: function (task) {
-      this.tasks.unshift(task)
     }
   }
 }
