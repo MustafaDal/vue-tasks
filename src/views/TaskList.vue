@@ -115,6 +115,14 @@ export default {
       editorActive: false
     }
   },
+  created () {
+    console.log(this)
+    this.$http.get('/api').then(response => {
+      this.$store.dispatch('allTasks', response.body.tasks)
+    }, response => {
+      console.error(response)
+    })
+  },
   computed: {
     filteredTasks: function () {
       let tasks = this.$store.getters.allTasks

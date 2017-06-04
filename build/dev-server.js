@@ -39,6 +39,13 @@ compiler.plugin('compilation', function (compilation) {
   })
 })
 
+let tasks = require('../tasks')
+
+// api routing
+app.get('/api', function (req, res) {
+  res.status(200).json({tasks})
+})
+
 // proxy api requests
 Object.keys(proxyTable).forEach(function (context) {
   var options = proxyTable[context]
